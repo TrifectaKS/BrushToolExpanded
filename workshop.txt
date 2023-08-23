@@ -1,0 +1,9 @@
+version=1
+title=Monkey-Mod-Template
+description=[h2]Brief 1 sentence description.[/h2]
+description=[h3]Commissioned by [b]client name[/b][/h3]
+description=
+description=[url=https://ko-fi.com/pzmonkey] [img]https://raw.githubusercontent.com/TrifectaKS/MonkeyWorkshopAds/main/buymeacoffee.png[/img] [/url]
+description=
+tags=Build 41;
+visibility=unlisted
