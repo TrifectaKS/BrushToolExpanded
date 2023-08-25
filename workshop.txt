@@ -1,9 +1,21 @@
 version=1
-title=Monkey-Mod-Template
-description=[h2]Brief 1 sentence description.[/h2]
-description=[h3]Commissioned by [b]client name[/b][/h3]
+id=3025189998
+title=Brush Tool Expanded
+description=[h2]Brush Tool Expanded[/h2]
+description=
+description=[h2]Current Features[/h2]
+description=These tools can be accessed from the context menu when the brush tool is enabled.
+description=[list]
+description=[*] Toggle Thumpable behavior to Thumpables. If this is set to OFF, that means that zombies won't target the tiles.
+description=[/list]
 description=
+description=Just a small warning. The function of placing objects through the normal place menu and through the brush tool menu is shared.
+description=This means that while your brush tool is activated, the options selected will also affect any placed tiles (such as furniture). To not "cheat" in your games, be sure to play with brush tool disabled, to use the vanilla behaviour.
+description=
+description=[b]If you want to commission any more features, reach out on discord: _mon.key[/b]
+description=
+description=[h3]Commissioned by [b]Mixcoatl[/b][/h3]
+description=
 description=[url=https://ko-fi.com/pzmonkey] [img]https://raw.githubusercontent.com/TrifectaKS/MonkeyWorkshopAds/main/buymeacoffee.png[/img] [/url]
-description=
-tags=Build 41;
-visibility=unlisted
+tags=Build 41
+visibility=public
