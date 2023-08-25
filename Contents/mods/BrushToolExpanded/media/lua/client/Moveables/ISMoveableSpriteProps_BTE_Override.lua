@@ -1,4 +1,20 @@
 require("Moveables/ISMoveableSpriteProps")
+
+local function getNameAndNumFromSpriteName(name)
+    local len = string.len(name)
+    local num = nil
+    local strName = nil
+    for i = len, 1, -1 do
+        local sub = string.sub(name, i, i)
+        if sub == "_" then
+            strName = string.sub(name, 1, i-1)
+            num = tonumber(string.sub(name, i+1, len))
+            break
+        end
+    end
+    return strName, num
+end
+
 function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteName )
     local obj;
     local north         = self.facing and (self.facing=="N" or self.facing=="S");
@@ -53,6 +69,7 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
         triggerEvent("OnObjectAdded", temp)
     elseif self.type=="Window" then
         obj = IsoWindow.new( getCell(), _square, getSprite( _spriteName ), north );
+        obj.isThumpable = BTE.IsThumpable
         obj:setIsLocked(false)
 
         local wallFrame = self:getWallForFacing( _square, north and "S" or "E", "WindowFrame" );
@@ -70,6 +87,7 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
                 if object == wallFrame then
                     insertIndex = i+1; --insert window after wallframe
                     if instanceof(object, "IsoThumpable") then
+                        object:setIsThumpable(BTE.IsThumpable);
                         if string.sub(sprite:getName(),1,string.len("walls_exterior_wooden"))=="walls_exterior_wooden" then
                             object:setHoppable(false);
                         end
@@ -124,23 +142,23 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
             local bbqSprite = getSprite(itemSprite);
             if bbqSprite then
                 obj = IsoBarbecue.new( getCell(), _square, bbqSprite );
-                obj:setMovedThumpable(true);
+                obj:setMovedThumpable(BTE.IsThumpable);
             end
         elseif self.isoType == "IsoBrokenGlass" then
             obj = IsoBrokenGlass.new(getCell())
             obj:setSquare(_square);
         elseif self.isoType == "IsoCombinationWasherDryer" then
             obj = IsoCombinationWasherDryer.new(getCell(), _square, getSprite(itemSprite))
-            obj:setMovedThumpable(true);
+            obj:setMovedThumpable(BTE.IsThumpable);
         elseif self.isoType == "IsoClothingDryer" then
             obj = IsoClothingDryer.new(getCell(), _square, getSprite(itemSprite))
-            obj:setMovedThumpable(true);
+            obj:setMovedThumpable(BTE.IsThumpable);
         elseif self.isoType == "IsoClothingWasher" then
             obj = IsoClothingWasher.new(getCell(), _square, getSprite(itemSprite))
-            obj:setMovedThumpable(true);
+            obj:setMovedThumpable(BTE.IsThumpable);
         elseif self.isoType == "IsoCompost" then
             obj = IsoCompost.new(getCell(), _square, getSprite(itemSprite))
-            obj:setMovedThumpable(true);
+            obj:setMovedThumpable(BTE.IsThumpable);
         elseif self.isoType == "IsoMannequin" then
             obj = IsoMannequin.new(getCell(), _square, getSprite(itemSprite))
             obj:setSquare(_square)
@@ -155,10 +173,10 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
             if instanceof(_item,"Radio") then
                 if self.isoType == "IsoRadio" then
                     obj = IsoRadio.new( getCell(), _square, getSprite(itemSprite) );
-                    --oobj:setMovedThumpable(true);
+                    --obj:setMovedThumpable(BTE.IsThumpable);
                 elseif self.isoType == "IsoTelevision" then
                     obj = IsoTelevision.new( getCell(), _square, getSprite(itemSprite) );
-                    --oobj:setMovedThumpable(true);
+                    --obj:setMovedThumpable(BTE.IsThumpable);
                 end
                 local deviceData = _item:getDeviceData();
                 if deviceData then
@@ -179,10 +197,10 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
             else
                 if self.isoType == "IsoRadio" then
                     obj = IsoRadio.new( getCell(), _square, getSprite(itemSprite) );
-                    obj:setMovedThumpable(true);
+                    obj:setMovedThumpable(BTE.IsThumpable);
                 elseif self.isoType == "IsoTelevision" then
                     obj = IsoTelevision.new( getCell(), _square, getSprite(itemSprite) );
-                    obj:setMovedThumpable(true);
+                    obj:setMovedThumpable(BTE.IsThumpable);
                 end
                 --[[
                 if obj ~= nil then
@@ -195,10 +213,10 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
 
         elseif self.isoType == "IsoJukebox" then
             obj = IsoJukebox.new( getCell(), _square, getSprite(itemSprite) );
-            obj:setMovedThumpable(true);
+            obj:setMovedThumpable(BTE.IsThumpable);
         elseif self.isoType == "IsoStove" then
             obj = IsoStove.new( getCell(), _square, getSprite(itemSprite) );
-            obj:setMovedThumpable(true);
+            obj:setMovedThumpable(BTE.IsThumpable);
             --doDestroyAble = true;
         elseif self.isoType == "IsoFireplace" or self.container == "fireplace" then
             obj = IsoFireplace.new( getCell(), _square, getSprite(itemSprite) );
@@ -223,7 +241,7 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
                     if props:Is(IsoFlagType.doorN) or props:Is(IsoFlagType.doorW) then
                         local tname, tnum = getNameAndNumFromSpriteName(itemSprite)
                         obj = IsoDoor.new(getCell(), _square, tname .. "_" .. tostring(tnum), props:Is(IsoFlagType.doorN));
-                        obj.isThumpable = BTE.IsThumpable
+                        if obj.isThumpable ~= nil then print('thumpable') obj.isThumpable = BTE.IsThumpable end
                     elseif props:Is(IsoFlagType.WallN) or props:Is(IsoFlagType.WallW) then
                         obj = IsoThumpable.new(getCell(), _square, itemSprite, props:Is(IsoFlagType.WallN), {})
                         obj:setIsThumpable(BTE.IsThumpable);
@@ -231,14 +249,14 @@ function ISMoveableSpriteProps:placeMoveableInternal( _square, _item, _spriteNam
                     elseif props:Is(IsoFlagType.WindowN) or props:Is(IsoFlagType.WindowW) then
                         obj = IsoWindow.new( getCell(), _square, getSprite( _spriteName ), props:Is(IsoFlagType.WindowN) );
                         obj:setIsLocked(false)
-                        obj.isThumpable = BTE.IsThumpable
+                        if obj.isThumpable ~= nil then print('thumpable') obj.isThumpable = BTE.IsThumpable end
                     else
                         obj = IsoObject.new( getCell(), _square, itemSprite );
-                        obj.isThumpable = BTE.IsThumpable
+                        if obj.isThumpable ~= nil then print('thumpable') obj.isThumpable = BTE.IsThumpable end
                     end
                 else
                     obj = IsoObject.new( getCell(), _square, itemSprite );
-                    obj.isThumpable = BTE.IsThumpable
+                    if obj.isThumpable ~= nil then print('thumpable') obj.isThumpable = BTE.IsThumpable end
                     -- FIXME: This was used for the POLICE station sign.  But it interfers with 3D-item placement on shelves.
                 end
             else
